@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Christine's Mobile Yoga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white: #ffffff;
+      --off-white: #fafaf9;
+      --text: #1c1c1c;
+      --muted: #6b7280;
+      --accent: #8a9e8c;
+      --accent-light: #e8ede9;
+      --border: #e5e7e6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--border);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* Dropdown */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      list-style: none;
+      min-width: 160px;
+      overflow: hidden;
+      z-index: 200;
+    }
+    /* Invisible bridge fills the gap so hover doesn't break */
+    .nav-dropdown::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      right: 0;
+      height: 8px;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu li a {
+      display: block;
+      padding: 12px 20px;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-dropdown-menu li a:hover {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+    .nav-dropdown-menu li + li { border-top: 1px solid var(--border); }
+
+    /* ── HERO ── */
+    .hero-scroll-wrapper {
+      height: 300vh;
+      position: relative;
+    }
+    .hero-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+
+    /* Left panel — white, text content */
+    .hero-left {
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 64px 80px 64px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.9s ease forwards 0.2s;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(48px, 5.5vw, 84px);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1s ease forwards 0.4s;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--border);
+      margin: 32px 0;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.6s;
+    }
+    .hero-sub {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 380px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 1s ease forwards 0.65s;
+    }
+    .hero-cta {
+      margin-top: 44px;
+      display: flex;
+      gap: 14px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 1s ease forwards 0.85s;
+    }
+    .hero-scroll-hint {
+      margin-top: 64px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1.2s;
+    }
+    .hero-scroll-hint span {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .scroll-track {
+      width: 32px;
+      height: 1px;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .scroll-track::after {
+      content: '';
+      position: absolute;
+      left: -100%;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--accent);
+      animation: trackSlide 2s ease-in-out infinite 1.4s;
+    }
+
+    /* Right panel — canvas */
+    .hero-right {
+      background: var(--white);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #doorstepCanvas, #yogaCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    /* Fade at bottom of doorstep (white bg) */
+    #heroWrapper .hero-right::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 180px;
+      background: linear-gradient(to bottom, transparent, var(--white));
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* Fade at bottom of yoga (dark bg) */
+    #yogaWrapper .hero-right::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 180px;
+      background: linear-gradient(to bottom, transparent, var(--text));
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* Yoga wrapper — dark background, white text */
+    #yogaWrapper .hero-left {
+      background: var(--text);
+    }
+    #yogaWrapper .hero-right {
+      background: var(--text);
+    }
+    #yogaWrapper .hero-title {
+      color: var(--white);
+    }
+    #yogaWrapper .hero-title em {
+      color: var(--accent);
+    }
+    #yogaWrapper .hero-divider {
+      background: rgba(255,255,255,0.25);
+    }
+    #yogaWrapper .hero-sub {
+      color: rgba(255,255,255,0.65);
+    }
+    #yogaWrapper .btn-primary {
+      background: var(--white);
+      color: var(--text);
+      border-color: var(--white);
+    }
+    #yogaWrapper .btn-primary:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--white);
+    }
+    .yoga-who-list {
+      list-style: none;
+      margin: 24px 0 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .yoga-who-list li {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.5;
+      padding-left: 16px;
+      position: relative;
+      max-width: none;
+    }
+    .yoga-who-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+    /* Progress bar at bottom of sticky panel */
+    .hero-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--accent);
+      z-index: 10;
+      transition: width 0.05s linear;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-block;
+      padding: 13px 32px;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .btn-primary {
+      background: var(--text);
+      color: var(--white);
+      border: 1px solid var(--text);
+    }
+    .btn-primary:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .btn-ghost {
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .btn-dark {
+      background: var(--text);
+      color: var(--white);
+      border: 1px solid var(--text);
+    }
+    .btn-dark:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .btn-outline {
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 100px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    h2 em { font-style: italic; }
+
+    .section-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--accent);
+      margin: 28px 0;
+    }
+
+    p {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 620px;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      padding: 0;
+      max-width: none;
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+    .about-photo-panel {
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+    }
+    .about-photo-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 30% top;
+      display: block;
+    }
+    .about-content-panel {
+      background: var(--off-white);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 72px;
+    }
+    .about-creds-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 40px;
+    }
+    @media (max-width: 900px) {
+      #about { grid-template-columns: 1fr; }
+      .about-photo-panel { min-height: 60vw; }
+      .about-content-panel { padding: 60px 32px; }
+    }
+    .credential-card {
+      padding: 28px 32px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--off-white);
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .credential-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .credential-card h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .credential-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: none;
+    }
+
+    /* ── OFFERINGS ── */
+    #offerings { border-top: none; padding: 0; max-width: none; }
+
+    /* Full-bleed image banner */
+    .offerings-banner {
+      position: relative;
+      width: 100%;
+      height: 95vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .offerings-banner-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 30% 20%;
+    }
+    /* No overlay needed — white card handles readability */
+    .offerings-banner-overlay { display: none; }
+
+    .offerings-banner-content {
+      position: relative;
+      z-index: 2;
+      padding: 64px 72px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+    /* White card — Equinox style */
+    .offerings-banner-card {
+      background: var(--white);
+      padding: 52px 48px;
+      max-width: 460px;
+      width: 100%;
+    }
+    .offerings-banner-card .section-label { color: var(--accent); }
+    .offerings-banner-card h2 {
+      color: var(--text);
+      font-size: clamp(36px, 4vw, 56px);
+    }
+    .offerings-banner-card h2 em { color: var(--accent); }
+    .offerings-banner-card .section-divider { background: var(--accent); }
+    .offerings-banner-card p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.75;
+      max-width: none;
+    }
+    .offerings-banner-card .btn {
+      margin-top: 36px;
+      display: inline-block;
+    }
+
+    /* Offerings grid below the banner */
+    .offerings-grid-section {
+      max-width: none;
+      margin: 0;
+      padding: 80px 48px;
+      background: #f5f0e8;
+    }
+    .offerings-grid-section .section-label { color: var(--accent); }
+    .offerings-grid-section h2 { color: var(--text); }
+    .offerings-grid-section h2 em { color: var(--accent); }
+    .offerings-grid-section > .reveal > p { color: var(--muted); }
+    .offerings-grid-section .section-divider { background: var(--accent); }
+    .styles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 48px;
+    }
+    .style-item {
+      display: block;
+      text-decoration: none;
+      background: #faf7f2;
+      padding: 28px 24px;
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+    .style-item:hover { background: var(--accent-light); }
+    .style-item h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .style-item p { font-size: 13px; line-height: 1.5; max-width: none; color: var(--muted); }
+
+    /* ── WHO ── */
+    .who-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+    .who-card {
+      padding: 36px 24px;
+      border-top: 2px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .who-card:hover { border-top-color: var(--accent); }
+    .who-icon { font-size: 28px; margin-bottom: 16px; }
+    .who-card h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .who-card p { font-size: 14px; line-height: 1.7; max-width: none; }
+
+    /* ── SCHEDULE + LOCATION (combined) ── */
+    #schedule {
+      background: #1d2219;
+      padding: 100px 72px;
+      max-width: none;
+      margin: 0;
+      min-height: 100vh;
+      position: relative;
+    }
+    .schedule-photos {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      align-items: flex-start;
+      pointer-events: none;
+    }
+    .schedule-photos img {
+      width: 160px;
+      opacity: 0.70;
+      display: block;
+    }
+    #schedule .section-label { color: var(--accent); }
+    #schedule h2 { color: var(--white); }
+    #schedule h2 em { color: var(--accent); }
+    #schedule .section-divider { background: rgba(138,158,140,0.5); }
+    #schedule > p, #schedule .schedule-intro { color: rgba(255,255,255,0.55); max-width: 520px; }
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 48px;
+    }
+    .day-col {
+      background: rgba(255,255,255,0.04);
+      padding: 28px 20px;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .day-col:hover { background: rgba(255,255,255,0.09); }
+    .day-name {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .class-item { margin-bottom: 18px; }
+    .class-time {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 4px;
+    }
+    .class-name { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.85); line-height: 1.4; }
+    .class-note { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 3px; font-style: italic; }
+    /* Location subsection within combined section */
+    .location-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin: 80px 0 56px;
+    }
+    .location-header { margin-bottom: 40px; }
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .location-card {
+      padding: 48px 40px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: border-color 0.3s;
+    }
+    .location-card:hover { border-color: var(--accent); }
+    .location-card.in-person { background: rgba(255,255,255,0.04); }
+    .location-card.online { background: rgba(138,158,140,0.1); }
+    .location-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .location-card p { font-size: 15px; max-width: none; color: rgba(255,255,255,0.55); }
+
+    /* ── YOGA TYPES SHOWCASE ── */
+    #yogaShowcaseWrapper {
+      height: 500vh;
+      position: relative;
+    }
+    .yoga-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .yoga-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+    .yoga-dark-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.38);
+    }
+    .yoga-label {
+      position: absolute;
+      top: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      text-align: center;
+      opacity: 0;
+    }
+    .yoga-label span {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+    .yoga-item {
+      position: absolute;
+      z-index: 3;
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .yoga-left {
+      left: 4%;
+      align-items: flex-end;
+      text-align: right;
+      transform: translateX(-20px);
+    }
+    .yoga-right {
+      right: 4%;
+      align-items: flex-start;
+      text-align: left;
+      transform: translateX(20px);
+    }
+    .yoga-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(18px, 2vw, 28px);
+      font-weight: 400;
+      color: var(--white);
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+    .yoga-desc {
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.6);
+    }
+    /* Short horizontal line pointing toward figure */
+    .yoga-line {
+      height: 1px;
+      width: 40px;
+      background: rgba(255,255,255,0.35);
+      margin-top: 8px;
+    }
+    .yoga-line-right { align-self: flex-end; }
+    .yoga-line-left  { align-self: flex-start; }
+
+    /* ── LOCATION ── */
+    #location {
+      border-top: 1px solid var(--border);
+      background: url('serenity_at_your_doorstep.jpg') center center / cover no-repeat;
+      position: relative;
+      min-height: 100vh;
+      max-width: none;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    #location::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.55);
+      pointer-events: none;
+    }
+    #location > * { position: relative; z-index: 1; }
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 56px;
+    }
+
+
+    /* ── CONTACT ── */
+    #contact {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #contact h2 { margin-bottom: 0; }
+    #contact .section-divider { margin: 28px auto; }
+    #contact p { text-align: center; }
+    .cta-actions { margin-top: 44px; display: flex; gap: 16px; }
+    .contact-note { margin-top: 24px; font-size: 13px; color: var(--muted); }
+
+    /* ── TESTIMONIALS CAROUSEL ── */
+    #testimonials {
+      background: var(--text);
+      padding: 80px 0;
+      max-width: none;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .t-label {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 56px;
+      text-align: center;
+    }
+    .t-carousel {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      width: 100%;
+      max-width: 960px;
+      padding: 0 48px;
+    }
+    .t-track {
+      flex: 1;
+      position: relative;
+      text-align: center;
+      min-height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .t-slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+      pointer-events: none;
+    }
+    .t-slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+      position: relative;
+    }
+    .t-slide.exit-left {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+    .t-stars {
+      color: var(--accent);
+      font-size: 20px;
+      letter-spacing: 4px;
+    }
+    .t-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(18px, 2.2vw, 26px);
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.65;
+      max-width: 720px;
+    }
+    .t-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--white);
+      max-width: none;
+      line-height: 1;
+    }
+    .t-role {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      max-width: none;
+    }
+    .t-arrow {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.6);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color 0.3s, color 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .t-arrow:hover {
+      border-color: var(--accent);
+      color: var(--white);
+    }
+    .t-dots {
+      display: flex;
+      gap: 10px;
+      margin-top: 48px;
+    }
+    .t-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+    .t-dot.active { background: var(--accent); }
+    @media (max-width: 900px) {
+      .t-carousel { padding: 0 24px; gap: 16px; }
+      #testimonials { padding: 80px 0; }
+    }
+
+    /* ── SIGNUP (Equinox-style split) ── */
+    #signup {
+      max-width: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      border-top: 1px solid var(--border);
+    }
+    .signup-left {
+      background: var(--text);
+      padding: 80px 72px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .signup-left .section-label { color: rgba(255,255,255,0.5); }
+    .signup-left h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(40px, 4.5vw, 64px);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .signup-left h2 em { font-style: italic; color: var(--accent); }
+    .signup-left p {
+      color: rgba(255,255,255,0.65);
+      font-size: 15px;
+      line-height: 1.75;
+      max-width: 400px;
+    }
+    .signup-left .signup-details {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .signup-detail {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+    }
+    .signup-detail::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .signup-right {
+      background: #f5f0e8;
+      padding: 80px 72px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .signup-right h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 36px;
+    }
+    .signup-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .session-type-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .session-type-option {
+      position: relative;
+      cursor: pointer;
+    }
+    .session-type-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .session-type-option span {
+      display: block;
+      padding: 14px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: #faf7f2;
+      transition: background 0.2s, color 0.2s;
+    }
+    .session-type-option:first-child span {
+      border-right: 1px solid var(--border);
+    }
+    .session-type-option input[type="radio"]:checked + span {
+      background: var(--accent);
+      color: var(--white);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-field input,
+    .form-field select {
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      background: #faf7f2;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text);
+      outline: none;
+      border-radius: 2px;
+      transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .form-field input::placeholder { color: var(--muted); }
+    .form-field input:focus,
+    .form-field select:focus { border-color: var(--accent); }
+    .form-field select option { background: #faf7f2; color: var(--text); }
+    .form-field select optgroup {
+      background: #f0ebe0;
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .select-wrap {
+      position: relative;
+    }
+    .select-wrap::after {
+      content: '↓';
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 12px;
+      pointer-events: none;
+    }
+    .form-field select option[value=""] { color: var(--muted); }
+    .signup-submit {
+      margin-top: 8px;
+      padding: 18px;
+      background: var(--text);
+      color: var(--white);
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.3s;
+    }
+    .signup-submit:hover { background: var(--accent); }
+    .signup-fine {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    @media (max-width: 900px) {
+      #signup { grid-template-columns: 1fr; }
+      .signup-left, .signup-right { padding: 60px 32px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0.04em;
+    }
+    .footer-links { display: flex; gap: 28px; list-style: none; }
+    .footer-links a {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { font-size: 12px; color: var(--muted); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes trackSlide {
+      0%   { left: -100%; }
+      50%  { left: 100%; }
+      100% { left: 100%; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      section { padding: 72px 24px; }
+      .hero-sticky { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 100px 32px 60px; }
+      #about { grid-template-columns: 1fr; gap: 48px; }
+      .offerings-intro { grid-template-columns: 1fr; gap: 40px; }
+      .styles-grid { grid-template-columns: 1fr 1fr; }
+      .who-grid { grid-template-columns: 1fr 1fr; }
+      .schedule-grid { grid-template-columns: 1fr; }
+      .location-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 24px; text-align: center; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">Christine's Mobile Yoga</a>
+    <ul class="nav-links">
+      <li class="nav-dropdown">
+        <a href="#about" class="nav-dropdown-toggle">About &#9662;</a>
+        <ul class="nav-dropdown-menu">
+          <li><a href="#about">Christine</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+        </ul>
+      </li>
+      <li><a href="#offerings">Offerings</a></li>
+      <li><a href="#schedule">Schedule</a></li>
+      <li><a href="#signup">Join Today</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO: scroll wrapper gives 300vh of scroll travel -->
+  <div class="hero-scroll-wrapper" id="heroWrapper">
+    <div class="hero-sticky">
+
+      <!-- LEFT: text -->
+      <div class="hero-left">
+        <p class="hero-eyebrow">RYT-200 &middot; Joga Certified &middot; San Mateo County &amp; Online</p>
+        <h1 class="hero-title">Serenity at<br /><em>your doorstep</em></h1>
+        <div class="hero-divider"></div>
+        <p class="hero-sub">Mobile yoga sessions — outdoors, at your home, at your workplace, or online via Zoom anywhere in the world.</p>
+        <div class="hero-cta">
+          <a href="#offerings" class="btn btn-primary">Explore Classes</a>
+          <a href="#contact" class="btn btn-ghost">Book a Session</a>
+        </div>
+        <div class="hero-scroll-hint">
+          <span>Scroll to explore</span>
+          <div class="scroll-track"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: scroll-driven canvas -->
+      <div class="hero-right">
+        <canvas id="doorstepCanvas"></canvas>
+      </div>
+
+      <!-- Thin progress bar -->
+      <div class="hero-progress" id="heroProgress"></div>
+
+    </div>
+  </div>
+
+  <!-- CHRISTINE -->
+  <section id="about">
+    <div class="about-photo-panel">
+      <img src="Christine Yoga Photo.jpeg" alt="Christine teaching yoga" />
+    </div>
+    <div class="about-content-panel">
+      <p class="section-label reveal">Christine</p>
+      <h2 class="reveal">Meet <em>Christine</em></h2>
+      <div class="section-divider reveal"></div>
+      <p class="reveal">RYT-200 registered through Yoga Alliance and certified Joga instructor with 15+ years of experience teaching across San Mateo County and online.</p>
+      <div class="about-creds-col">
+        <div class="credential-card reveal reveal-delay-1">
+          <h4>Yoga Alliance RYT-200</h4>
+          <p>Internationally recognized registered yoga teacher certification.</p>
+        </div>
+        <div class="credential-card reveal reveal-delay-2">
+          <h4>Joga Certified</h4>
+          <p>Athletic yoga for performance — <a href="https://jogaworld.com/" target="_blank" style="color:var(--accent); text-decoration:none;">jogaworld.com →</a></p>
+        </div>
+        <div class="credential-card reveal reveal-delay-3">
+          <h4>15+ Years Experience</h4>
+          <p>Teaching all levels, ages, and backgrounds across San Mateo County and online.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS CAROUSEL -->
+  <section id="testimonials">
+    <p class="t-label">What People Are Saying</p>
+    <div class="t-carousel">
+      <button class="t-arrow t-prev" aria-label="Previous">&#8592;</button>
+      <div class="t-track">
+        <div class="t-slide active">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-quote">"Christine is absolutely terrific — she instructed me and my husband at our home, and instantly put us at ease with her great vibe and energy. The class itself was wonderful, very instructive. She was very conscious of our postures and ensuring that we did not overextend ourselves or do anything damaging, and just so great overall that my husband agreed to make it a regular thing."</p>
+          <p class="t-name">Dicla L.</p>
+        </div>
+        <div class="t-slide">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-quote">"I've worked with Christine in both public and private lessons. She is really in tune with the level of my abilities and gears our practice toward the improvement in strength and flexibility that I'm after."</p>
+          <p class="t-name">Danette D.</p>
+        </div>
+        <div class="t-slide">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-quote">"Christine is great! We are thrilled to have met her — she totally gets kids, pets and parents trying to do yoga. We look forward to our now regular weekly sessions with her."</p>
+          <p class="t-name">Taj B.</p>
+        </div>
+        <div class="t-slide">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-quote">"Christine recently started coming to my house to help me learn yoga. She spends a lot of time teaching me stretches, which is very helpful before doing yoga poses. Her simple guidance has been invaluable in improving balance. Love her calm, positive energy."</p>
+          <p class="t-name">Monic S.</p>
+        </div>
+        <div class="t-slide">
+          <div class="t-stars">★★★★★</div>
+          <p class="t-quote">"Christine is super nice. I always feel so much better after our yoga session. Highly recommended! She teaches me stretches that target my body issue."</p>
+          <p class="t-name">Rebecca L.</p>
+        </div>
+      </div>
+      <button class="t-arrow t-next" aria-label="Next">&#8594;</button>
+    </div>
+    <div class="t-dots">
+      <span class="t-dot active"></span>
+      <span class="t-dot"></span>
+      <span class="t-dot"></span>
+      <span class="t-dot"></span>
+      <span class="t-dot"></span>
+    </div>
+  </section>
+
+  <!-- YOGA: scroll animation -->
+  <div class="hero-scroll-wrapper" id="yogaWrapper">
+    <div class="hero-sticky">
+      <div class="hero-left">
+        <h1 class="hero-title">Yoga that moves<br /><em>with you</em></h1>
+        <div class="hero-divider"></div>
+        <p class="hero-sub">Whether you're a beginner or an athlete, every session is customized for your goals.</p>
+        <p class="hero-sub" style="margin-top:24px; margin-bottom:0;">Christine's Mobile Yoga is dedicated to bringing yoga to:</p>
+        <ul class="yoga-who-list">
+          <li>Groups in corporate settings — beginners to experienced yogis</li>
+          <li>Individuals in one-on-one sessions — athletes of all levels</li>
+          <li>Seniors at senior centers — Chair Yoga and gentle mat poses</li>
+          <li>Fitness centers, community centers, schools &amp; yoga studios</li>
+        </ul>
+        <div class="hero-cta">
+          <a href="#contact" class="btn btn-primary">Book a Session</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <canvas id="yogaCanvas"></canvas>
+      </div>
+      <div class="hero-progress" id="yogaProgress"></div>
+    </div>
+  </div>
+
+  <!-- OFFERINGS -->
+  <section id="offerings">
+
+    <!-- Header + styles grid -->
+    <div class="offerings-grid-section">
+      <div class="reveal">
+        <p class="section-label">What I Teach</p>
+        <h2>Classes for <em>every level</em></h2>
+        <div class="section-divider"></div>
+        <p>From gentle chair yoga for seniors to power yoga for athletes — Christine tailors each class to the group or individual in front of her.</p>
+      </div>
+      <div class="styles-grid reveal">
+        <a href="#signup" class="style-item"><h4>Beginner Yoga</h4><p>Foundations, breath, and body awareness</p></a>
+        <a href="#signup" class="style-item"><h4>Power Yoga</h4><p>Strength-building, dynamic flow sequences</p></a>
+        <a href="#signup" class="style-item"><h4>Restorative &amp; Yin</h4><p>Deep release, passive holds, nervous system reset</p></a>
+        <a href="#signup" class="style-item"><h4>Healthy Back</h4><p>Targeted practice for spine health and relief</p></a>
+        <a href="#signup" class="style-item"><h4>Joga (Athletic)</h4><p>Performance yoga designed for athletes</p></a>
+        <a href="#signup" class="style-item"><h4>Chair Yoga</h4><p>Accessible seated practice for seniors</p></a>
+        <a href="#signup" class="style-item"><h4>Vinyasa Flow</h4><p>Breath-synchronized movement and transitions</p></a>
+        <a href="#signup" class="style-item"><h4>Customized</h4><p>Built around your specific goals and needs</p></a>
+        <a href="#signup" class="style-item"><h4>Corporate Groups</h4><p>Workplace wellness for any experience level</p></a>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- SCHEDULE -->
+  <section id="schedule">
+    <div class="schedule-photos">
+      <img src="outdoor tree.jpg" alt="" aria-hidden="true" />
+      <img src="cobra.png" alt="" aria-hidden="true" />
+      <img src="Rock Photo.png" alt="" aria-hidden="true" />
+      <img src="Christines yoga pose.png" alt="" aria-hidden="true" />
+    </div>
+    <div class="reveal">
+      <p class="section-label">Weekly Schedule</p>
+      <h2>Find your <em>class</em></h2>
+      <div class="section-divider"></div>
+      <p class="schedule-intro">Drop into an ongoing class or reach out to Christine for private and custom sessions.</p>
+    </div>
+
+    <div class="schedule-grid reveal">
+      <div class="day-col">
+        <div class="day-name">Monday</div>
+        <div class="class-item">
+          <div class="class-time">9:30 AM</div>
+          <div class="class-name">Yoga for a Healthy Back</div>
+          <div class="class-note">Online — reserve your spot below</div>
+        </div>
+        <div class="class-item">
+          <div class="class-time">11:30 AM</div>
+          <div class="class-name">Vinyasa Yoga</div>
+          <div class="class-note">College of San Mateo (members)</div>
+        </div>
+      </div>
+      <div class="day-col">
+        <div class="day-name">Tuesday</div>
+        <div class="class-item">
+          <div class="class-time">10:15 AM</div>
+          <div class="class-name">Chair Yoga</div>
+          <div class="class-note">Online via San Carlos ACC · 650-802-4384</div>
+        </div>
+        <div class="class-item">
+          <div class="class-time">4:00 PM</div>
+          <div class="class-name">Yin Yoga</div>
+          <div class="class-note">College of San Mateo (members)</div>
+        </div>
+      </div>
+      <div class="day-col">
+        <div class="day-name">Wednesday</div>
+        <div class="class-item">
+          <div class="class-name">Private Lessons</div>
+          <div class="class-note">Email Christine for availability</div>
+        </div>
+      </div>
+      <div class="day-col">
+        <div class="day-name">Thursday</div>
+        <div class="class-item">
+          <div class="class-time">9:30 AM</div>
+          <div class="class-name">Yoga for a Healthy Back</div>
+          <div class="class-note">Online — reserve your spot below</div>
+        </div>
+        <div class="class-item">
+          <div class="class-time">10:15 AM</div>
+          <div class="class-name">Chair Yoga</div>
+          <div class="class-note">Online</div>
+        </div>
+        <div class="class-item">
+          <div class="class-name">Private Lessons</div>
+          <div class="class-note">Email Christine for availability</div>
+        </div>
+      </div>
+      <div class="day-col">
+        <div class="day-name">Friday</div>
+        <div class="class-item">
+          <div class="class-name">Private Lessons</div>
+          <div class="class-note">Email Christine for availability</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="location-divider" />
+
+    <div class="location-header reveal">
+      <p class="section-label">Where We Meet</p>
+      <h2>In person or <em>online</em></h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="location-grid">
+      <div class="location-card in-person reveal">
+        <h3>San Mateo County</h3>
+        <p>In-person sessions across San Mateo and surrounding areas. Christine comes to you — your office, home, community center, studio, or outdoor space.</p>
+      </div>
+      <div class="location-card online reveal reveal-delay-1">
+        <h3>Online via Zoom</h3>
+        <p>Live classes and private sessions available anywhere in California or beyond via Zoom or FaceTime. Same quality, any location.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- SIGNUP (Equinox-style) -->
+  <div id="contact"></div>
+  <section id="signup">
+
+    <!-- Left: pitch -->
+    <div class="signup-left reveal">
+      <p class="section-label">Get Started</p>
+      <h2>2 steps,<br />and you're <em>in.</em></h2>
+      <p>Tell Christine a little about yourself and she'll reach out to set up your first session — no commitment required.</p>
+      <div class="signup-details">
+        <div class="signup-detail">Private one-on-one or group sessions available</div>
+        <div class="signup-detail">In-person (San Mateo County) or online via Zoom</div>
+        <div class="signup-detail">Beginner to advanced, all ages welcome</div>
+        <div class="signup-detail">Customized to your goals and schedule</div>
+      </div>
+    </div>
+
+    <!-- Right: form -->
+    <div class="signup-right reveal reveal-delay-1">
+      <h3>Reserve your spot</h3>
+      <form class="signup-form" action="mailto:christinesalah@gmail.com" method="post" enctype="text/plain">
+        <div class="session-type-toggle">
+          <label class="session-type-option">
+            <input type="radio" name="session_type" value="Individual" checked />
+            <span>Individual</span>
+          </label>
+          <label class="session-type-option">
+            <input type="radio" name="session_type" value="Group" />
+            <span>Group</span>
+          </label>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <input type="text" name="first_name" placeholder="First Name" required />
+          </div>
+          <div class="form-field">
+            <input type="text" name="last_name" placeholder="Last Name" required />
+          </div>
+        </div>
+        <div class="form-field">
+          <input type="email" name="email" placeholder="Email" required />
+        </div>
+        <div class="form-field">
+          <input type="text" name="zip" placeholder="Zip Code" />
+        </div>
+        <div class="form-field select-wrap">
+          <select name="class_type" required>
+            <option value="" disabled selected>Select a Class</option>
+            <optgroup label="Private Lessons — Limited Availability">
+              <option value="private-beginner">Beginner Yoga</option>
+              <option value="private-power">Power Yoga</option>
+              <option value="private-yin">Restorative &amp; Yin</option>
+              <option value="private-back">Healthy Back Yoga</option>
+              <option value="private-joga">Athletic Yoga (Joga)</option>
+              <option value="private-chair">Chair Yoga</option>
+              <option value="private-vinyasa">Vinyasa Flow</option>
+              <option value="private-custom">Customized</option>
+            </optgroup>
+            <optgroup label="Christine's Core Community Class: Yoga for a Healthy Back — Limited Availability">
+              <option value="back-monday">Monday at 9:30 AM (Online)</option>
+              <option value="back-thursday">Thursday at 9:30 AM (Online)</option>
+              <option value="back-bundle">Both — Monday &amp; Thursday Bundle (Online)</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-field select-wrap" id="deliveryWrap">
+          <select name="delivery" id="deliverySelect">
+            <option value="" disabled selected>Preferred Delivery — Private Lessons Only (Optional)</option>
+            <option value="online">Online (Zoom)</option>
+            <option value="in-person">In-Person</option>
+          </select>
+        </div>
+        <button type="submit" class="signup-submit">Get In Touch</button>
+      </form>
+      <p class="signup-fine">Christine will follow up within 24 hours. For Chair Yoga, contact San Carlos ACC at 650-802-4384.</p>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Christine's Mobile Yoga</div>
+    <ul class="footer-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#offerings">Classes</a></li>
+      <li><a href="#schedule">Schedule</a></li>
+      <li><a href="https://jogaworld.com/" target="_blank">Joga</a></li>
+    </ul>
+    <p class="footer-copy">© 2026 Christine's Mobile Yoga · San Mateo County, CA</p>
+  </footer>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── Reusable canvas frame animation ──
+    function makeCanvasAnim(canvasId, frameCount, frameDir, wrapperId, progressId) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const frames = [];
+      let currentFrame = 0;
+
+      function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
+        canvas.width  = rect.width  * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        drawFrame(currentFrame);
+      }
+
+      function drawFrame(index) {
+        currentFrame = index;
+        const img = frames[Math.min(index, frames.length - 1)];
+        if (!img || !img.complete || !img.naturalWidth) return;
+        const rect = canvas.getBoundingClientRect();
+        const cw = rect.width, ch = rect.height;
+        const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+        const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
+        ctx.clearRect(0, 0, cw, ch);
+        ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+      }
+
+      let gsapReady = false;
+      function initGsap() {
+        if (gsapReady) return;
+        gsapReady = true;
+        resizeCanvas();
+        const anim = { frame: 0 };
+        gsap.to(anim, {
+          frame: frameCount - 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#' + wrapperId,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 0.5,
+            onUpdate(self) {
+              const el = document.getElementById(progressId);
+              if (el) el.style.width = (self.progress * 100) + '%';
+            },
+          },
+          onUpdate() { drawFrame(Math.round(anim.frame)); },
+        });
+      }
+
+      for (let i = 0; i < frameCount; i++) {
+        const img = new Image();
+        img.onload = () => { if (i === 0) initGsap(); };
+        img.src = `${frameDir}/frame_${String(i + 1).padStart(4, '0')}.jpg`;
+        frames.push(img);
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      window.addEventListener('load', () => { resizeCanvas(); ScrollTrigger.refresh(); });
+    }
+
+    // Doorstep animation (hero) — 60 frames
+    makeCanvasAnim('doorstepCanvas', 60, 'doorstep-frames', 'heroWrapper', 'heroProgress');
+    // Yoga animation — 100 frames
+    makeCanvasAnim('yogaCanvas', 100, 'frames', 'yogaWrapper', 'yogaProgress');
+
+    // ── Testimonials carousel ──
+    const slides = document.querySelectorAll('.t-slide');
+    const dots   = document.querySelectorAll('.t-dot');
+    let current  = 0;
+
+    function goTo(index) {
+      slides[current].classList.remove('active');
+      slides[current].classList.add('exit-left');
+      dots[current].classList.remove('active');
+      setTimeout(() => slides[current === index ? index : current].classList.remove('exit-left'), 560);
+      current = (index + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    document.querySelector('.t-prev').addEventListener('click', () => goTo(current - 1));
+    document.querySelector('.t-next').addEventListener('click', () => goTo(current + 1));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+    // Auto-advance every 6 seconds
+    let autoplay = setInterval(() => goTo(current + 1), 6000);
+    document.querySelector('#testimonials').addEventListener('mouseenter', () => clearInterval(autoplay));
+    document.querySelector('#testimonials').addEventListener('mouseleave', () => {
+      autoplay = setInterval(() => goTo(current + 1), 6000);
+    });
+
+    // ── Delivery method visibility ──
+    const classSelect    = document.querySelector('select[name="class_type"]');
+    const deliveryWrap   = document.getElementById('deliveryWrap');
+    const deliverySelect = document.getElementById('deliverySelect');
+
+    function updateDelivery() {
+      const isPrivate = classSelect.value.startsWith('private-');
+      deliveryWrap.style.opacity  = isPrivate ? '1' : '0.4';
+      deliveryWrap.style.pointerEvents = isPrivate ? 'auto' : 'none';
+      if (!isPrivate) deliverySelect.value = '';
+    }
+    classSelect.addEventListener('change', updateDelivery);
+    // Init
+    deliveryWrap.style.opacity = '0.4';
+    deliveryWrap.style.pointerEvents = 'none';
+
+    // ── Schedule → Join Today ──
+    document.querySelectorAll('.day-col').forEach(col => {
+      col.addEventListener('click', () => {
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // ── Scroll reveal ──
+    const reveals = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => revealObserver.observe(el));
+  </script>
+
+</body>
+</html>
