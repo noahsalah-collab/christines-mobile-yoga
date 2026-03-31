@@ -1604,13 +1604,9 @@
     <!-- Right: form -->
     <div class="signup-right reveal reveal-delay-1">
       <h3>Reserve your spot</h3>
-      <!-- Web3Forms: get a free access key at web3forms.com (enter christinesalah@gmail.com) and paste it below -->
-      <form class="signup-form" id="signupForm" action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="8c84901e-4585-411f-bafd-2fb763fac1de" />
-        <input type="hidden" name="subject" value="New Session Request - Christine's Mobile Yoga" />
-        <input type="hidden" name="from_name" value="Christine's Mobile Yoga Website" />
-        <!-- Web3Forms honeypot — keeps spam filter happy -->
-        <input type="checkbox" name="botcheck" style="display:none" />
+      <!-- Formspree: replace FORM_ID below with the ID from formspree.io -->
+      <form class="signup-form" id="signupForm">
+        <input type="hidden" name="_subject" value="New Session Request - Christine's Mobile Yoga" />
         <div class="session-type-toggle">
           <label class="session-type-option">
             <input type="radio" name="session_type" value="Individual" checked />
@@ -1818,7 +1814,8 @@
       if (!e.target.closest('nav')) closeNav();
     });
 
-    // ── Form submission (Web3Forms) ──
+    // ── Form submission (Formspree) ──
+    const FORMSPREE_ID = 'mzdkgkay';
     const signupForm   = document.getElementById('signupForm');
     const formMessage  = document.getElementById('formMessage');
     const signupSubmit = document.getElementById('signupSubmit');
@@ -1827,22 +1824,24 @@
       signupSubmit.disabled = true;
       signupSubmit.textContent = 'Sending…';
       try {
-        const res  = await fetch('https://api.web3forms.com/submit', {
+        const res  = await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
           method: 'POST',
           body: new FormData(signupForm),
+          headers: { 'Accept': 'application/json' },
         });
         const data = await res.json();
-        if (data.success) {
+        if (res.ok) {
           signupForm.style.display = 'none';
           formMessage.style.display = 'block';
           formMessage.style.background = 'var(--accent-light)';
           formMessage.style.color = 'var(--accent)';
           formMessage.textContent = 'Thank you! Christine will be in touch within 24 hours.';
         } else {
+          const msg = data.errors ? data.errors.map(e => e.message).join(', ') : 'Unknown error.';
           formMessage.style.display = 'block';
           formMessage.style.background = '#fde8e8';
           formMessage.style.color = '#b91c1c';
-          formMessage.textContent = 'Error: ' + (data.message || 'Unknown error. Please email christinesalah@gmail.com directly.');
+          formMessage.textContent = 'Error: ' + msg + ' Please email christinesalah@gmail.com directly.';
           signupSubmit.disabled = false;
           signupSubmit.textContent = 'Get In Touch';
         }
@@ -1850,7 +1849,7 @@
         formMessage.style.display = 'block';
         formMessage.style.background = '#fde8e8';
         formMessage.style.color = '#b91c1c';
-        formMessage.textContent = 'Something went wrong: ' + err.message + '. Please email christinesalah@gmail.com directly.';
+        formMessage.textContent = 'Something went wrong. Please email christinesalah@gmail.com directly.';
         signupSubmit.disabled = false;
         signupSubmit.textContent = 'Get In Touch';
       }
