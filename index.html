@@ -1607,8 +1607,10 @@
       <!-- Web3Forms: get a free access key at web3forms.com (enter christinesalah@gmail.com) and paste it below -->
       <form class="signup-form" id="signupForm" action="https://api.web3forms.com/submit" method="POST">
         <input type="hidden" name="access_key" value="8c84901e-4585-411f-bafd-2fb763fac1de" />
-        <input type="hidden" name="subject" value="New Session Request — Christine's Mobile Yoga" />
+        <input type="hidden" name="subject" value="New Session Request - Christine's Mobile Yoga" />
         <input type="hidden" name="from_name" value="Christine's Mobile Yoga Website" />
+        <!-- Web3Forms honeypot — keeps spam filter happy -->
+        <input type="checkbox" name="botcheck" style="display:none" />
         <div class="session-type-toggle">
           <label class="session-type-option">
             <input type="radio" name="session_type" value="Individual" checked />
