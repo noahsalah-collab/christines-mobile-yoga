@@ -1837,13 +1837,18 @@
           formMessage.style.color = 'var(--accent)';
           formMessage.textContent = 'Thank you! Christine will be in touch within 24 hours.';
         } else {
-          throw new Error(data.message);
+          formMessage.style.display = 'block';
+          formMessage.style.background = '#fde8e8';
+          formMessage.style.color = '#b91c1c';
+          formMessage.textContent = 'Error: ' + (data.message || 'Unknown error. Please email christinesalah@gmail.com directly.');
+          signupSubmit.disabled = false;
+          signupSubmit.textContent = 'Get In Touch';
         }
       } catch (err) {
         formMessage.style.display = 'block';
         formMessage.style.background = '#fde8e8';
         formMessage.style.color = '#b91c1c';
-        formMessage.textContent = 'Something went wrong. Please email Christine directly at christinesalah@gmail.com.';
+        formMessage.textContent = 'Something went wrong: ' + err.message + '. Please email christinesalah@gmail.com directly.';
         signupSubmit.disabled = false;
         signupSubmit.textContent = 'Get In Touch';
       }
